@@ -176,6 +176,18 @@ namespace ExOckwig
                     Console.ReadKey(true);
             }
         }
+         /********************************************************************
+        *** FUNCTION Expression Value***
+        *********************************************************************
+        *** DESCRIPTION : Parses the given input to determine the value     ***
+        ***               from the string either searching the symbol table ***
+        ***               or parsing the input and setting the RFlag Value  ***
+        *** INPUT ARGS : string Expression, char Operand, out bool RFlag,   ***
+                         BST SymbolTable, out bool Error                    ***
+        *** OUTPUT ARGS : none                                              ***
+        *** IN/OUT ARGS : bool RFlag, bool Error                            ***
+        *** RETURN : int value (returned value)                             ***
+        ********************************************************************/
         private static int ExpressionValue(string Expression, char Operand, out bool RFlag, BST SymbolTable, out bool Error)
         {
             int value = 0;
