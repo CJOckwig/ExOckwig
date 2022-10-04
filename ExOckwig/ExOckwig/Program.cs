@@ -4,6 +4,15 @@ using System.Collections.Generic;
 using ExOckwig;
 internal class Program
 {
+        /*********************************************************************
+        *** NAME : Caleb Ockwig                                            ***
+        *** CLASS : CSc 354                                                ***
+        *** ASSIGNMENT : 2                                                 ***
+        *** DUE DATE : 10/5                                                ***
+        *** INSTRUCTOR : GAMRADT ***
+        *********************************************************************
+        *** DESCRIPTION : Evaluates all of the expressions in a given file.***
+        ********************************************************************/
     static void Main(string[] args)
     {
         String FilePath = (args.Length == 1) ? args[0] : null;

@@ -13,6 +13,16 @@ namespace ExOckwig
 {
     internal class ExVal //Expression Evaluation
     {
+
+        /*********************************************************************
+        *** NAME : Caleb Ockwig                                            ***
+        *** CLASS : CSc 354                                                ***
+        *** ASSIGNMENT : 2                                                 ***
+        *** DUE DATE : 10/5                                                ***
+        *** INSTRUCTOR : GAMRADT ***
+        *********************************************************************
+        *** DESCRIPTION : Evaluates all of the expressions in a given file.***
+        ********************************************************************/
         public ExVal(string inputFile, out LinkedList<Literal> LiteralTable, BST SymbolTable)
         {
             string[] lineValues = { };
@@ -42,10 +52,9 @@ namespace ExOckwig
                 string[] Symbols = { };
                 int ExpValue = 0;
                 string value = "";
-                bool IndexBit = false, NBit = false, IBit = false, RFlag = false, Error = false;
+                bool IndexBit = false, NBit = false,IBit = false, RFlag = false, Error = false;
                 if (lineValue.Length > 2)
                 {
-                    Console.WriteLine(lineValue + " last two chars: " +lineValue.Substring(lineValue.Length - 2)+"\n\n");
                     if (lineValue.Substring(lineValue.Length - 2).Equals(",X"))
                     {
                         IndexBit = true;
@@ -92,71 +101,88 @@ namespace ExOckwig
                     case 2:// indirect @ 
                         NBit = true;
                         IBit = false;
-                        if (lineValue.Contains('+'))
+                        Error = IndexBit;
+                        if(Error)
                         {
-                            ExpValue = ExpressionValue(lineValue, '+', out IndexBit, out RFlag, SymbolTable, out Error);
-
-                        }
-                        else if (lineValue.Contains("-"))
-                        {
-                            ExpValue = ExpressionValue(lineValue, '-', out IndexBit, out RFlag, SymbolTable, out Error);
+                            Console.WriteLine(outputExpress + " cannot use indirect + index register");
                         }
                         else
                         {
-                            ExpValue = ExpressionValue(lineValue, ' ', out IndexBit, out RFlag, SymbolTable, out Error);
+                            if (lineValue.Contains('+'))
+                            {
+                                ExpValue = ExpressionValue(lineValue, '+', out RFlag, SymbolTable, out Error);
+                            }
+                            else if (lineValue.Contains("-"))
+                            {
+                                ExpValue = ExpressionValue(lineValue, '-', out RFlag, SymbolTable, out Error);
+                            }
+                            else
+                            {
+                                ExpValue = ExpressionValue(lineValue, ' ', out RFlag, SymbolTable, out Error);
+                            }
                         }
+                            
+                        
                         break;
                     case 3://immediate addressing #
                         NBit = false;
                         IBit = true;
-
-                        if (lineValue.Contains('+'))
+                        Error = IndexBit;
+                        if(Error)
                         {
-                            ExpValue = ExpressionValue(lineValue, '+', out IndexBit, out RFlag, SymbolTable, out Error);
-
-                        }
-                        else if (lineValue.Contains("-"))
-                        {
-                            ExpValue = ExpressionValue(lineValue, '-', out IndexBit, out RFlag, SymbolTable, out Error);
+                            Console.WriteLine(outputExpress + " cannot use immediate + index register");
                         }
                         else
                         {
-                            ExpValue = ExpressionValue(lineValue, ' ', out IndexBit, out RFlag, SymbolTable, out Error);
+                        if (lineValue.Contains('+'))
+                            {
+                                ExpValue = ExpressionValue(lineValue, '+', out RFlag, SymbolTable, out Error);
+
+                            }
+                            else if (lineValue.Contains("-"))
+                            {
+                                ExpValue = ExpressionValue(lineValue, '-', out RFlag, SymbolTable, out Error);
+                            }
+                                else
+                            {
+                                ExpValue = ExpressionValue(lineValue, ' ', out RFlag, SymbolTable, out Error);
+                            }
+
                         }
-
-
                         break;
 
-                    case 4:
+                    case 4://simple
                         IBit = true;
                         NBit = true;
                         if (lineValue.Contains('+'))
                         {
-                            ExpValue = ExpressionValue(lineValue, '+', out IndexBit, out RFlag, SymbolTable, out Error);
+                            ExpValue = ExpressionValue(lineValue, '+', out RFlag, SymbolTable, out Error);
 
 
                         }
                         else if (lineValue.Contains("-"))
                         {
-                            ExpValue = ExpressionValue(lineValue, '-', out IndexBit, out RFlag, SymbolTable, out Error);
+                            ExpValue = ExpressionValue(lineValue, '-',  out RFlag, SymbolTable, out Error);
                         }
                         else
                         {
-                            ExpValue = ExpressionValue(lineValue, ' ', out IndexBit, out RFlag, SymbolTable, out Error);
+                            ExpValue = ExpressionValue(lineValue, ' ', out RFlag, SymbolTable, out Error);
                         }
                         break;
                 }
                 if (!Error)
                     PrintExp(outputExpress, ExpValue, RFlag, NBit, IBit, IndexBit);
+                if(j%20 == 0)
+                    Console.ReadKey(true);
             }
         }
-        private static int ExpressionValue(string Expression, char Operand, out bool IndexBit, out bool RFlag, BST SymbolTable, out bool Error)
+        private static int ExpressionValue(string Expression, char Operand, out bool RFlag, BST SymbolTable, out bool Error)
         {
             int value = 0;
-            IndexBit = false;
             RFlag = true;
             Error = false;
             string[] Symbols = { };
+            string expressionTemp = Expression;
 
             if (Operand != ' ')
             {
@@ -216,6 +242,7 @@ namespace ExOckwig
                     if (RFlag1 == true && RFlag2 == true)
                     {
                         Error = true;//Absolute + relative
+                        Console.WriteLine("ERROR "+ expressionTemp +"- Invalid RFlag Values: " + Symbols[0] + " " + RFlag1 + " " + Operand + " " + Symbols[1] + " " + RFlag2);
                     }
                     value = number1 + number2;
 
@@ -239,7 +266,7 @@ namespace ExOckwig
             return value;
         }
         /********************************************************************
-        *** FUNCTION <name of function> ***
+        *** FUNCTION CheckLine***
         *********************************************************************
         *** DESCRIPTION : Determines what kind of addressing the          ***
                          expression gives                                 ***
